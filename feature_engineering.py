@@ -25,3 +25,4 @@ df['rating'] = df['rating'].str.replace('out of 5','').astype('float')
 #cleaning other prices
 
 # %%
+#test
