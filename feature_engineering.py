@@ -23,13 +23,5 @@ df['other_prices'].unique()
 df['rating'] = df['rating'].str.replace('out of 5','').astype('float')
 #%%
 #cleaning other prices
-df['other_prices'] = df['other_prices'].str.replace('">','').str.replace('-',',').str.replace('$','')
-#astype('float')
-#%%
-print(df['other_prices'].isnull().sum(), df['other_prices'].isna().sum())
-df.loc[60,'other_prices']
-df['other_prices'].value_counts()
 
-# %%
-df.shape
 # %%
