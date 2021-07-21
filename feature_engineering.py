@@ -50,3 +50,14 @@ c.sum()
 # %%
 df1 = pd.DataFrame(k,b)
 df1
+#%%
+df['other_prices'] = df['other_prices'].str.replace('">','').str.replace('-',',').str.replace('$','')
+#astype('float')
+#%%
+print(df['other_prices'].isnull().sum(), df['other_prices'].isna().sum())
+df.loc[60,'other_prices']
+df['other_prices'].value_counts()
+
+# %%
+df.shape
+# %%
