@@ -21,15 +21,32 @@ df['other_prices'].unique()
 # %%
 #cleaning rating out of 5
 df['rating'] = df['rating'].str.replace('out of 5','').astype('float')
-#%%
-#cleaning other prices
+
+#cleaning other prices and other colors
 df['other_prices'] = df['other_prices'].str.replace('">','').str.replace('-',',').str.replace('$','')
-#astype('float')
+
+df['other_colors'] = df['other_colors']
+
+df['other_colors'].unique()
+
+df['other_prices'].unique()
 #%%
 print(df['other_prices'].isnull().sum(), df['other_prices'].isna().sum())
 df.loc[60,'other_prices']
 df['other_prices'].value_counts()
+k = df['other_prices']==0
+k.sum()
 
 # %%
-df.shape
+df['other_prices'].unique()
 # %%
+df['other_colors'].unique()
+# %%
+k = df['other_colors'].apply(lambda x: len(x))
+
+b = df['other_prices'].apply(lambda x: len(x))
+c= k == b
+c.sum()
+# %%
+df1 = pd.DataFrame(k,b)
+df1
