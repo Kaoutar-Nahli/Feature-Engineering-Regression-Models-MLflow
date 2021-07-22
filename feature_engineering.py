@@ -1,6 +1,7 @@
 #%%
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import re
 #%%
 df = pd.read_csv('amazon_data_cleaned_01.csv')
@@ -116,8 +117,8 @@ class dimention_convertion_thickness():
         if self.dimention == 'feet':
             self.from_feet_to_mm() 
             return self.value
-        elif self.dimention ==  'micron':
-            self.from_micron_to_mm()
+        # elif self.dimention ==  'micron':
+        #     self.from_micron_to_mm()
             return self.value
         elif self.dimention == 'centimeters':
             self.from_cm_to_mm()
@@ -125,18 +126,23 @@ class dimention_convertion_thickness():
         elif self.dimention == 'inches':
             self.from_inches_to_mm()
             return self.value
-        elif self.dimention == 'milimeters':
+        elif self.dimention == 'millimeters':
             return self.value
         elif self.dimention == 'mils':
-            return self.value    
+            return self.value  
+        elif self.value == 'nan':
+            return np.nan   
+        else:
+            print(self.value, self.dimention)
+            return(np.nan)  
 
     def from_feet_to_mm( self):
        
            self.value =  self.value * 304.8
        
-    def from_micron_to_mm(self):
+    # def from_micron_to_mm(self):
        
-            self.value =  self.value / 1000
+    #         self.value =  self.value / 1000
         
     def from_cm_to_mm(self):
         
@@ -151,18 +157,41 @@ df['thickness']=df['thickness'].str.strip()
 df['thickness_float'] = df['thickness'].apply(lambda x:  x if type(x)==float else x.split()[0]).astype(float)
 df['thickness_dim']= df['thickness'].apply(lambda x:  x if type(x)==float else x.split()[1]).str.lower().str.replace('item','').str.replace('league','')
           
-
+print(df['thickness_dim'].unique())
 #apply convertion_dimention class
 df['thickness_mm'] = df.apply(lambda row: dimention_convertion_thickness(row.thickness_float ,row.thickness_dim).convert(), axis=1)
-df.drop(['thickness','thickness_float','thickness_dim'], axis=1, inplace=True)
-#%%
-df.thickness_mm.unique()
-#%%
-#df.isna().sum()
-#df['rating'].unique()
-#  'number_reviews', 'rating',
-#        'reviews_text', 'other_prices',
-#        'other_colors', 'combined_price', 'weight',
-#  'dimentions', 'care',
-#   'thickness', 'material', 'brand', 'color'
 
+#df.drop(['thickness','thickness_float','thickness_dim'], axis=1, inplace=True)
+#%%
+#%%
+df['thickness_2'] =df['thickness_2'].apply(lambda x: dimention_convertion_thickness(x ,'inches').convert())
+#%%
+#comparing  thickness_2 from table features and thickness_mm
+plt.plot(df['thickness_2'])
+plt.plot(df['thickness_mm'])
+plt.legend()
+mask =df['thickness_2']>0 
+mask_2 =  df['thickness_mm']>0
+#%%
+df['thickness_2'][mask][mask_2].mean(), df['thickness_mm'][mask][mask_2].mean()
+
+
+#%%
+df.isna().sum()
+'''
+
+Completed:
+    'number_reviews', 'rating','combined_price', 'weight',dimentions',  'thickness
+
+To explore NLP:
+    'reviews_text', 
+
+To complete in branch other_prices_color
+     'other_prices', other_colors'
+ '
+Still to complete in master:
+    'care', 'material', 'brand', 'color'
+'''
+
+
+# %%
