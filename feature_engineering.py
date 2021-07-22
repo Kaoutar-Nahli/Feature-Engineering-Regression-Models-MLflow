@@ -65,8 +65,12 @@ df.head()
 #%%
 df.shape
 # %%
+#Converting dimention in volume
+df[]
+#%%
 #  'number_reviews', 'rating',
 #        'reviews_text', 'other_prices',
-#        'other_colors', 'combined_price', 'weight', 'dimentions', 'care',
-#        'thickness', 'material', 'brand', 'color'
+#        'other_colors', 'combined_price', 'weight',
+#  'dimentions', 'care',
+#   'thickness', 'material', 'brand', 'color'
 # %%
