@@ -96,12 +96,68 @@ df['thickness_2'][df['thickness_2'].notnull()]
 regex_dimention = re.compile(r'[a-z]+')
 df['dimention_LXW']= df['dimentions'].apply(lambda x:  x if type(x)==float else re.findall(regex_dimention,x))
 df['dimention_LXW'] = df['dimention_LXW'].apply(lambda y: np.nan  if y==[]  else str(y))
-#df['dimention_LXW'].unique()
+df['dimention_LXW'].unique()
 #all is in inches 
 
 
 #%%
-df['thickness']
+
+# %%
+
+class dimention_convertion_thickness():
+    '''
+     'feet', 'micron' 'centimeters', 'inches' to 'milimeters'
+    '''
+    def __init__(self,value_float, dimention) :
+        self.value = value_float
+        self.dimention = dimention
+        
+    def convert (self):
+        if self.dimention == 'feet':
+            self.from_feet_to_mm() 
+            return self.value
+        elif self.dimention ==  'micron':
+            self.from_micron_to_mm()
+            return self.value
+        elif self.dimention == 'centimeters':
+            self.from_cm_to_mm()
+            return self.value
+        elif self.dimention == 'inches':
+            self.from_inches_to_mm()
+            return self.value
+        elif self.dimention == 'milimeters':
+            return self.value
+        elif self.dimention == 'mils':
+            return self.value    
+
+    def from_feet_to_mm( self):
+       
+           self.value =  self.value * 304.8
+       
+    def from_micron_to_mm(self):
+       
+            self.value =  self.value / 1000
+        
+    def from_cm_to_mm(self):
+        
+           self.value =  self.value * 100
+
+    def from_inches_to_mm(self):
+        
+           self.value =  self.value * 25.4
+
+
+df['thickness']=df['thickness'].str.strip()
+df['thickness_float'] = df['thickness'].apply(lambda x:  x if type(x)==float else x.split()[0]).astype(float)
+df['thickness_dim']= df['thickness'].apply(lambda x:  x if type(x)==float else x.split()[1]).str.lower().str.replace('item','').str.replace('league','')
+          
+
+#apply convertion_dimention class
+df['thickness_mm'] = df.apply(lambda row: dimention_convertion_thickness(row.thickness_float ,row.thickness_dim).convert(), axis=1)
+df.drop(['thickness','thickness_float','thickness_dim'], axis=1, inplace=True)
+#%%
+df.thickness_mm.unique()
+#%%
 #df.isna().sum()
 #df['rating'].unique()
 #  'number_reviews', 'rating',
@@ -109,18 +165,4 @@ df['thickness']
 #        'other_colors', 'combined_price', 'weight',
 #  'dimentions', 'care',
 #   'thickness', 'material', 'brand', 'color'
-# %%
 
-regex_thickness = re.compile(r'([\d+\s*a*]+x[\s*\d+\s*])|([\d*\s*a*]+X[\s*\d*\s*])')
-df['test'] = df['name'].str.findall(regex_thickness)
-df['test']
-# %%
-for i in ['test']:
-    try:
-        df[i] = df[i].apply(lambda y:np.nan  if y==[] else y)
-    except Exception as e:
-        print(e)
-df['test'].isna().sum()
-# %%
-df['test'][df['test'].notnull()]
-# %%
